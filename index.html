@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="en">
+<head prefix="og: http://wcfcourier.com/app/special/tabletop_to_leaflet/">
+<head>
+<head>
+	<title>Leipzig - LiD (test)</title>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+    <!-- Mobile meta tags-->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" /> <!--Angaben zur Größe des sichtbaren Bereich und zur Skalierbarkeit -->
+	<!--<meta name="MobileOptimized" content="320"/> <!-- Sagt dem mobile Browser , die Screenbreite für die die Seitze optimiert wurde -->
+	<meta name="apple-mobile-web-app-capable" content="yes"> <!--Aktiviert Vollbild-Modus(Apple-Geräte)-->
+	<meta http-equiv="cleartype" content="on"><!--Erlaubt Aktivierung von "ClearType" in Mobilen IE for smoothing fonts-->
+
+
+	<!-- CSS -->
+	<link rel="stylesheet" href="css/leaflet.css" />
+	<!--[if lte IE 8]>
+		<link rel="stylesheet" href="css/leaflet.ie.css" />
+	<![endif]-->
+	<link rel="stylesheet" href="css/bootstrap.min.css" />
+	<link rel="stylesheet" href="css/bootstrap-responsive.min.css" />
+	<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+	<!-- Javascript -->
+	<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="js/leaflet.js"></script>
+	<script type="text/javascript" src="js/tabletop.js"></script>
+    <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+
+    <noscript>
+		<div id="noscript_note">
+			You must have JavaScript enabled to view this page.
+		</div>
+	</noscript>
+
+	<div id="sidebar">
+		<div class="sidebar_header">
+			<h3>Things & Stuffs </h3>
+		</div>
+	
+
+		
+
+		<div class="sidebar_content">
+			
+			<label for="daRotzb"> Routenauswahl</label> 
+			<select id="daRoutzb" data-native-menu="false" onchange = "routeChange(this);">
+			
+				<option id="kR" value="0">keine</option>
+				<option id="R1" value="1">Route 1</option>
+				<option id="R2" value="2">Route 2</option>
+				<option id="R3"	value="3">Route 3</option>
+				<option id="R4"	value="4">Route 4</option> 
+				<option id="R5" value="5">Route 5</option>
+			</select>
+		
+			<button id="geolocb" onclick="getLocation();">Geolocation</button>
+		
+			<p>The map template is responsive, meaning it works on screens both big and small.</p>
+			<p>It uses <a href="http://leafletjs.com/" target="_blank">Leaflet</a> and <a href="http://twitter.github.io/bootstrap/" target="_blank">Bootstrap</a>.</p>
+			<!--<p>If you have any questions, feel free to contact <a href="https://twitter.com/courieressig" target="_blank">Chris Essig</a>.</p> -->
+			<!-- <p>H/T to <a href="https://twitter.com/ChrisLKeller" target="_blank">Chris Keller</a> for his work on his Tabletop to DataTables <a href="https://github.com/chrislkeller/datafeed_to_datatables" target="_blank">template</a>.</p> -->
+    	</div>
+	</div>
+
+	<div class="toggle_description btn" type="button">
+		About this map
+	</div>
+
+	<div class="description_box">
+		<div class="x_button toggle_description btn btn-primary" type="button">
+			<strong>X</strong>
+		</div>
+		<div class="description_box_header"></div>
+		<div class="description_box_content">
+			<div class="description_box_text"></div>
+			<div id="caption_box"></div>
+		</div>
+	</div>
+	<div class="description_box_cover"></div>
+	
+	<div id="map"></div>
+
+	<script src="js/script.js"></script>  <!--in this Script is the map Works!-->
+	
+	
+	
+		
+	<script> <!-- schrottiges eigenes Icon  Works!-->
+		var ownIcon = L.icon({
+			iconUrl:'js/images/ownicon.png',
+			
+			iconSize:     [38, 95], // size of the icon [38, 95]
+			//shadowSize:   [50, 64], // size of the shadow
+			iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+			//shadowAnchor: [4, 62],  // the same for the shadow
+			//popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+});
+</script>
+	
+	<script> <!--Routenloading und Auswahl LP!!-->
+/*	
+Problem, wenn nicht als erstes 'Route1' geklickt wird.!!!!
+*/
+var route1;
+var route2;
+var route3;
+var route4;
+var route5;
+
+function loadr1() {
+			$.getJSON("gjson/paths.geojson", 
+			function(paths) {
+			 route1 = L.geoJson(paths)
+			 route1.addTo(map);
+			} 
+		);
+	}
+function loadr2() {
+			$.getJSON("gjson/routeII.geojson",
+			function(routeII) {
+			 route2 = L.geoJson(routeII)
+			 route2.addTo(map);
+			}
+		);
+	}
+function loadr3() {
+			$.getJSON("gjson/routeIII.geojson",
+			function(routeIII) {
+			 route3 = L.geoJson(routeIII)
+			 route3.addTo(map);
+			}
+		);
+	}
+
+function loadr4() {
+			$.getJSON("gjson/routeIV.geojson",
+			function(routeIV) {
+			 route4 = L.geoJson(routeIV)
+			 route4.addTo(map);
+			}
+		);
+    }
+
+function loadr5() {
+			$.getJSON("gjson/routeV.geojson",
+			function(routeV) {
+			route5 = L.geoJson (routeV)
+			route5.addTo(map);
+			}
+		);
+	}
+	
+function clearRoute1(){
+		map.removeLayer(route1);
+	}
+function clearRoute2() {
+		map.removeLayer(route2);
+	}
+function clearRoute3() {
+		map.removeLayer(route3);
+	}
+function clearRoute4() {
+		map.removeLayer(route4);
+	}
+	
+function clearRoute5() {
+		map.removeLayer(route5);
+	}
+	
+	</script>
+	
+	<script><!--****Rotenanzeigen*** -->
+		function routeChange(sel) {
+			var value = sel.value;
+
+			switch (value){
+			case "0":
+				clearRoute1();
+				clearRoute2();
+				clearRoute3();
+				clearRoute4();
+				clearRoute5();
+				break;
+			case "1":
+				
+				loadr1();
+				clearRoute2();
+				clearRoute3();
+				clearRoute4();
+				clearRoute5();
+				break;
+			case "2":
+				
+				loadr2();
+				clearRoute1();
+				clearRoute3();
+				clearRoute4();
+				clearRoute5();
+				break;
+			case "3":
+				
+				loadr3();
+				clearRoute1();
+				clearRoute2();
+				clearRoute4();
+				clearRoute5();
+				break;
+			case "4":
+				
+				loadr4();
+				clearRoute1();
+				clearRoute2();
+				clearRoute3();
+				clearRoute5();
+				break;
+			
+			case "5":
+				
+				loadr5();
+				clearRoute1();
+				clearRoute2();
+				clearRoute3();
+				clearRoute4();
+			}
+			
+			
+			/*if (value == "1")
+				{test();}
+			if (value == "2")
+				{alert("Route 2");}
+			if (value == "3")
+				{alert("route3");}
+			if (value == "4")
+				{alert("Route4");}
+			*/	
+		}					
+	
+</script>
+	
+	
+	<script> <!-- GeolocationWorks! --> 
+
+var x = document.getElementById("geolocb");
+var lat, lon , pos;
+	function getLocation()
+	{
+		if (navigator.geolocation)
+		{
+		navigator.geolocation.getCurrentPosition(showPosition);
+		}
+		else
+		{
+		x.innerHTML = "Geolocation is not supported by this browser.";
+		}
+	}
+	function showPosition(position)
+	{
+		//x.innerHTML = "Latttttitude: " + position.coords.latitude +"<br>Longitude: " + position.coords.longitude;
+		alert("Latitude: " + position.coords.latitude +"<br>Longitude: " + position.coords.longitude);
+				
+		lat = position.coords.latitude;
+		lon = position.coords.longitude;
+				
+		var marker = L.marker([lat,lon], {icon: ownIcon}).addTo(map);
+		//setView: true,
+  
+	}
+	
+</script>	
+
+	
+
+</body>	
+
+</html>
